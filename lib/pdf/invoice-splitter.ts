@@ -1,15 +1,12 @@
 import { PDFDocument } from 'pdf-lib';
-import { renderPageToCanvas, getPageDimensions } from './loader';
+import { getPageDimensions } from './loader';
 
-export const FLIPKART_A4_CROP = {
-  x: 194.3,
-  y: 67.7,
-  width: 210.2,
-  height: 290.4
+export const FLIPKART_CROP = {
+  x: 181.9,
+  y: 61.9,
+  width: 231.3,
+  height: 309.6
 };
-
-const THERMAL_WIDTH = 224.81;
-const THERMAL_HEIGHT = 310.82;
 
 export interface InvoiceSplitResult {
   labelsPdf: Uint8Array;
@@ -17,15 +14,6 @@ export interface InvoiceSplitResult {
   labelsCount: number;
   invoicesCount: number;
   totalPages: number;
-}
-
-async function canvasToPng(canvas: HTMLCanvasElement): Promise<Uint8Array> {
-  const pngBytes = await new Promise<Uint8Array>((resolve) => {
-    canvas.toBlob((blob) => {
-      blob!.arrayBuffer().then((ab) => resolve(new Uint8Array(ab)));
-    }, 'image/png');
-  });
-  return pngBytes;
 }
 
 export async function splitFlipkartPDF(
@@ -51,30 +39,25 @@ export async function splitFlipkartPDF(
     const isA4 = width > 590;
 
     if (isA4) {
-      const scale = 2.0;
-      const fullCanvas = await renderPageToCanvas(page, scale);
+      const tempPdf = await PDFDocument.create();
+      const [srcPage] = await tempPdf.copyPages(pdfDoc, [pageNum - 1]);
+      tempPdf.addPage(srcPage);
+      await tempPdf.save();
 
-      const cropX = FLIPKART_A4_CROP.x * scale;
-      const cropY = FLIPKART_A4_CROP.y * scale;
-      const cropW = FLIPKART_A4_CROP.width * scale;
-      const cropH = FLIPKART_A4_CROP.height * scale;
+      const cropped = await labelsPdf.embedPages([srcPage], [{
+        left: FLIPKART_CROP.x,
+        bottom: height - FLIPKART_CROP.y - FLIPKART_CROP.height,
+        right: FLIPKART_CROP.x + FLIPKART_CROP.width,
+        top: height - FLIPKART_CROP.y
+      }]);
+      const croppedPage = cropped[0];
 
-      const cropped = document.createElement('canvas');
-      cropped.width = cropW;
-      cropped.height = cropH;
-
-      const ctx = cropped.getContext('2d')!;
-      ctx.drawImage(fullCanvas, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
-
-      const pngBytes = await canvasToPng(cropped);
-      const image = await labelsPdf.embedPng(pngBytes);
-
-      const newPage = labelsPdf.addPage([THERMAL_WIDTH, THERMAL_HEIGHT]);
-      newPage.drawImage(image, {
+      const newPage = labelsPdf.addPage([FLIPKART_CROP.width, FLIPKART_CROP.height]);
+      newPage.drawPage(croppedPage, {
         x: 0,
         y: 0,
-        width: THERMAL_WIDTH,
-        height: THERMAL_HEIGHT
+        width: FLIPKART_CROP.width,
+        height: FLIPKART_CROP.height
       });
       
       labelsCount++;
