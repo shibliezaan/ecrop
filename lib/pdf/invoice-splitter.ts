@@ -1,5 +1,5 @@
 import { PDFDocument } from 'pdf-lib';
-import { getPageDimensions } from './loader';
+import { getPageDimensions, renderPageToCanvas } from './loader';
 
 export const FLIPKART_CROP = {
   x: 181.9,
@@ -14,6 +14,14 @@ export interface InvoiceSplitResult {
   labelsCount: number;
   invoicesCount: number;
   totalPages: number;
+}
+
+async function canvasToPng(canvas: HTMLCanvasElement): Promise<Uint8Array> {
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => {
+      blob!.arrayBuffer().then((ab) => resolve(new Uint8Array(ab)));
+    }, 'image/png');
+  });
 }
 
 export async function splitFlipkartPDF(
@@ -39,37 +47,31 @@ export async function splitFlipkartPDF(
     const isA4 = width > 590;
 
     if (isA4) {
-      const tempPdf = await PDFDocument.create();
-      const [srcPage] = await tempPdf.copyPages(pdfDoc, [pageNum - 1]);
-      tempPdf.addPage(srcPage);
-      const tempBytes = await tempPdf.save();
+      const scale = 3.0;
+      const fullCanvas = await renderPageToCanvas(page, scale);
 
-      const src = await PDFDocument.load(tempBytes);
-      const srcPage0 = src.getPage(0);
-      const { width: pw, height: ph } = srcPage0.getSize();
+      const cropX = FLIPKART_CROP.x * scale;
+      const cropY = FLIPKART_CROP.y * scale;
+      const cropW = FLIPKART_CROP.width * scale;
+      const cropH = FLIPKART_CROP.height * scale;
 
-      const x = FLIPKART_CROP.x;
-      const y = FLIPKART_CROP.y;
-      const w = FLIPKART_CROP.width;
-      const h = FLIPKART_CROP.height;
+      const cropped = document.createElement('canvas');
+      cropped.width = cropW;
+      cropped.height = cropH;
 
-      const out = await PDFDocument.create();
-      const newPage = out.addPage([w, h]);
-      const embedded = await out.embedPage(srcPage0);
+      const ctx = cropped.getContext('2d')!;
+      ctx.drawImage(fullCanvas, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
 
-      const yFromBottom = ph - y - h;
+      const pngBytes = await canvasToPng(cropped);
+      const image = await labelsPdf.embedPng(pngBytes);
 
-      newPage.drawPage(embedded, {
-        x: -x,
-        y: -yFromBottom,
-        width: pw,
-        height: ph
+      const newPage = labelsPdf.addPage([FLIPKART_CROP.width, FLIPKART_CROP.height]);
+      newPage.drawImage(image, {
+        x: 0,
+        y: 0,
+        width: FLIPKART_CROP.width,
+        height: FLIPKART_CROP.height
       });
-
-      const outBytes = await out.save();
-      const outPdf = await PDFDocument.load(outBytes);
-      const [croppedPage] = await labelsPdf.copyPages(outPdf, [0]);
-      labelsPdf.addPage(croppedPage);
 
       labelsCount++;
     } else {
