@@ -42,24 +42,35 @@ export async function splitFlipkartPDF(
       const tempPdf = await PDFDocument.create();
       const [srcPage] = await tempPdf.copyPages(pdfDoc, [pageNum - 1]);
       tempPdf.addPage(srcPage);
-      await tempPdf.save();
+      const tempBytes = await tempPdf.save();
 
-      const cropped = await labelsPdf.embedPages([srcPage], [{
-        left: FLIPKART_CROP.x,
-        bottom: height - FLIPKART_CROP.y - FLIPKART_CROP.height,
-        right: FLIPKART_CROP.x + FLIPKART_CROP.width,
-        top: height - FLIPKART_CROP.y
-      }]);
-      const croppedPage = cropped[0];
+      const src = await PDFDocument.load(tempBytes);
+      const srcPage0 = src.getPage(0);
+      const { width: pw, height: ph } = srcPage0.getSize();
 
-      const newPage = labelsPdf.addPage([FLIPKART_CROP.width, FLIPKART_CROP.height]);
-      newPage.drawPage(croppedPage, {
-        x: 0,
-        y: 0,
-        width: FLIPKART_CROP.width,
-        height: FLIPKART_CROP.height
+      const x = FLIPKART_CROP.x;
+      const y = FLIPKART_CROP.y;
+      const w = FLIPKART_CROP.width;
+      const h = FLIPKART_CROP.height;
+
+      const out = await PDFDocument.create();
+      const newPage = out.addPage([w, h]);
+      const embedded = await out.embedPage(srcPage0);
+
+      const yFromBottom = ph - y - h;
+
+      newPage.drawPage(embedded, {
+        x: -x,
+        y: -yFromBottom,
+        width: pw,
+        height: ph
       });
-      
+
+      const outBytes = await out.save();
+      const outPdf = await PDFDocument.load(outBytes);
+      const [croppedPage] = await labelsPdf.copyPages(outPdf, [0]);
+      labelsPdf.addPage(croppedPage);
+
       labelsCount++;
     } else {
       const [copiedPage] = await labelsPdf.copyPages(pdfDoc, [pageNum - 1]);
