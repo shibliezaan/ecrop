@@ -1,6 +1,15 @@
 import { PDFDocument } from 'pdf-lib';
-import { getPreset } from './presets';
-import { renderPageToCanvas } from './loader';
+import { renderPageToCanvas, getPageDimensions } from './loader';
+
+export const FLIPKART_A4_CROP = {
+  x: 194.3,
+  y: 67.7,
+  width: 210.2,
+  height: 290.4
+};
+
+const THERMAL_WIDTH = 224.81;
+const THERMAL_HEIGHT = 310.82;
 
 export interface InvoiceSplitResult {
   labelsPdf: Uint8Array;
@@ -8,35 +17,6 @@ export interface InvoiceSplitResult {
   labelsCount: number;
   invoicesCount: number;
   totalPages: number;
-}
-
-async function getPageDimensions(page: any): Promise<{ width: number; height: number }> {
-  const viewport = page.getViewport({ scale: 1 });
-  return { width: viewport.width, height: viewport.height };
-}
-
-async function cropPageToBox(
-  page: any,
-  pageWidth: number,
-  pageHeight: number,
-  cropBox: { x: number; y: number; width: number; height: number }
-): Promise<HTMLCanvasElement> {
-  const scale = 2.0;
-  const canvas = await renderPageToCanvas(page, scale);
-
-  const x = cropBox.x * pageWidth * scale;
-  const y = cropBox.y * pageHeight * scale;
-  const w = cropBox.width * pageWidth * scale;
-  const h = cropBox.height * pageHeight * scale;
-
-  const cropped = document.createElement('canvas');
-  cropped.width = w;
-  cropped.height = h;
-
-  const ctx = cropped.getContext('2d')!;
-  ctx.drawImage(canvas, x, y, w, h, 0, 0, w, h);
-
-  return cropped;
 }
 
 async function canvasToPng(canvas: HTMLCanvasElement): Promise<Uint8Array> {
@@ -52,7 +32,6 @@ export async function splitFlipkartPDF(
   pdfDoc: any,
   onProgress?: (progress: number) => void
 ): Promise<InvoiceSplitResult> {
-  const preset = getPreset('flipkart');
   const numPages = pdfDoc.numPages;
 
   const labelsPdf = await PDFDocument.create();
@@ -64,40 +43,48 @@ export async function splitFlipkartPDF(
   let labelsCount = 0;
   let invoicesCount = 0;
 
-  const labelBox = preset.labelBox!;
-  const invoiceBox = preset.invoiceBox!;
-
   for (let i = 0; i < numPages; i++) {
     const pageNum = i + 1;
     const page = await pdfDoc.getPage(pageNum);
     const { width, height } = await getPageDimensions(page);
 
-    const labelCanvas = await cropPageToBox(page, width, height, labelBox);
-    const labelPng = await canvasToPng(labelCanvas);
-    const labelImage = await labelsPdf.embedPng(labelPng);
+    const isA4 = width > 590;
 
-    const labelPage = labelsPdf.addPage([preset.labelWidth, preset.labelHeight]);
-    labelPage.drawImage(labelImage, {
-      x: 0,
-      y: 0,
-      width: preset.labelWidth,
-      height: preset.labelHeight,
-    });
-    labelsCount++;
+    if (isA4) {
+      const scale = 2.0;
+      const fullCanvas = await renderPageToCanvas(page, scale);
 
-    const invoiceCanvas = await cropPageToBox(page, width, height, invoiceBox);
-    const invoicePng = await canvasToPng(invoiceCanvas);
-    const invoiceImage = await invoicesPdf.embedPng(invoicePng);
+      const cropX = FLIPKART_A4_CROP.x * scale;
+      const cropY = FLIPKART_A4_CROP.y * scale;
+      const cropW = FLIPKART_A4_CROP.width * scale;
+      const cropH = FLIPKART_A4_CROP.height * scale;
 
-    const A4_WIDTH = 595.28;
-    const A4_HEIGHT = 841.89;
-    const invoicePage = invoicesPdf.addPage([A4_WIDTH, A4_HEIGHT]);
-    invoicePage.drawImage(invoiceImage, {
-      x: 0,
-      y: 0,
-      width: A4_WIDTH,
-      height: A4_HEIGHT,
-    });
+      const cropped = document.createElement('canvas');
+      cropped.width = cropW;
+      cropped.height = cropH;
+
+      const ctx = cropped.getContext('2d')!;
+      ctx.drawImage(fullCanvas, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+
+      const pngBytes = await canvasToPng(cropped);
+      const image = await labelsPdf.embedPng(pngBytes);
+
+      const newPage = labelsPdf.addPage([THERMAL_WIDTH, THERMAL_HEIGHT]);
+      newPage.drawImage(image, {
+        x: 0,
+        y: 0,
+        width: THERMAL_WIDTH,
+        height: THERMAL_HEIGHT
+      });
+      
+      labelsCount++;
+    } else {
+      const [copiedPage] = await labelsPdf.copyPages(pdfDoc, [pageNum - 1]);
+      labelsPdf.addPage(copiedPage);
+      labelsCount++;
+    }
+
+    invoicesPdf.addPage([595.28, 841.89]);
     invoicesCount++;
 
     if (onProgress) {
