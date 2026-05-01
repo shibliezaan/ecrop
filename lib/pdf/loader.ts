@@ -3,7 +3,7 @@ import * as pdfjs from 'pdfjs-dist';
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
 if (typeof window !== 'undefined') {
-  pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+  pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 }
 
 export interface PDFDocumentProxy {
