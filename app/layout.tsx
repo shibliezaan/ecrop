@@ -4,8 +4,21 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 
 export const metadata: Metadata = {
-  title: "eCrop - Free Label Cropper for Amazon, Flipkart, Meesho Sellers",
-  description: "Crop shipping labels instantly. Free, browser-only, zero uploads. No registration. Supports Amazon, Flipkart, Meesho, Myntra, Snapdeal, GlowRoad.",
+  title: "LabelCrop - Free Flipkart Amazon Meesho Label Cropper",
+  description: "Crop shipping labels for Flipkart, Amazon, Meesho to 4x6 thermal size. Free, no upload, works in browser.",
+  metadataBase: new URL("https://labelcrop.shop"),
+  keywords: ["flipkart label cropper", "amazon label cropper", "meesho label crop", "shipping label crop", "thermal label maker"],
+  alternates: {
+    canonical: "https://labelcrop.shop",
+  },
+  openGraph: {
+    title: "LabelCrop - Free Shipping Label Cropper",
+    description: "Crop shipping labels for Flipkart, Amazon, Meesho to 4x6 thermal size. Free, browser-only.",
+    url: "https://labelcrop.shop",
+    siteName: "LabelCrop",
+    locale: "en_US",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
