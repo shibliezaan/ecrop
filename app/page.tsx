@@ -1,65 +1,124 @@
-import Image from "next/image";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { SEO_PAGES, DEFAULT_OG } from "@/lib/seo/metadata";
 
-export default function Home() {
+export const metadata: Metadata = {
+  ...SEO_PAGES.home,
+  openGraph: {
+    ...DEFAULT_OG,
+    title: SEO_PAGES.home.title,
+    description: SEO_PAGES.home.description,
+  },
+};
+
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="container mx-auto px-4 py-12">
+      <section className="text-center mb-16 max-w-3xl mx-auto">
+        <h1 className="text-[48px] font-bold leading-tight tracking-[-1.5px] text-notion-black mb-4">
+          Free Label Cropping Tool for Amazon, Flipkart & Meesho
+        </h1>
+        <p className="text-[15px] font-semibold text-warm-gray-500 mb-4">
+          Privacy-First • Browser-Only Processing • Zero Uploads
+        </p>
+        <p className="text-[15px] text-warm-gray-500 mb-6">
+          Smart automation for shipping labels. Crop, organize, and format labels with precision in seconds. Completely free, no registration required. All processing happens in your browser for maximum privacy.
+        </p>
+        <div className="inline-flex flex-wrap justify-center gap-3 mb-4">
+          <span className="bg-badge-blue-bg text-badge-blue-text rounded-full px-3 py-1 text-[13px] font-semibold">No Registration</span>
+          <span className="bg-badge-blue-bg text-badge-blue-text rounded-full px-3 py-1 text-[13px] font-semibold">No File Uploads</span>
+          <span className="bg-badge-blue-bg text-badge-blue-text rounded-full px-3 py-1 text-[13px] font-semibold">Unlimited Usage</span>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-16">
+        <Card>
+          <h2 className="text-[18px] font-semibold text-notion-black mb-2">Meesho Labels</h2>
+          <p className="text-[14px] text-warm-gray-500 mb-4">Auto-crop and sort Meesho shipping labels by SKU instantly</p>
+          <Link href="/crop/meesho">
+            <Button>Start Cropping</Button>
+          </Link>
+        </Card>
+        <Card>
+          <h2 className="text-[18px] font-semibold text-notion-black mb-2">Flipkart Labels</h2>
+          <p className="text-[14px] text-warm-gray-500 mb-4">Process Flipkart shipping labels with invoice integration</p>
+          <Link href="/crop/flipkart">
+            <Button>Start Cropping</Button>
+          </Link>
+        </Card>
+        <Card>
+          <h2 className="text-[18px] font-semibold text-notion-black mb-2">Amazon Labels</h2>
+          <p className="text-[14px] text-warm-gray-500 mb-4">Optimize Amazon FBA and seller-fulfilled shipping labels</p>
+          <Link href="/crop/amazon">
+            <Button>Start Cropping</Button>
+          </Link>
+        </Card>
+      </section>
+
+      <section className="max-w-3xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="text-center">
+            <h3 className="text-[16px] font-semibold text-notion-black mb-2">Browser-Only Processing</h3>
+            <p className="text-[14px] text-warm-gray-500">All cropping happens directly in your browser. No server uploads, no cloud storage</p>
+          </div>
+          <div className="text-center">
+            <h3 className="text-[16px] font-semibold text-notion-black mb-2">Zero Data Collection</h3>
+            <p className="text-[14px] text-warm-gray-500">We never see, store, or access your files</p>
+          </div>
+          <div className="text-center">
+            <h3 className="text-[16px] font-semibold text-notion-black mb-2">Instant Download</h3>
+            <p className="text-[14px] text-warm-gray-500">Processed labels download directly to your device</p>
+          </div>
         </div>
-      </main>
+      </section>
+
+      <section className="text-center mb-8">
+        <p className="text-[14px] text-warm-gray-500">
+          <Link href="/crop/amazon" className="text-notion-blue hover:underline">Crop Amazon labels</Link>
+          {" • "}
+          <Link href="/crop/flipkart" className="text-notion-blue hover:underline">Crop Flipkart labels</Link>
+          {" • "}
+          <Link href="/crop/meesho" className="text-notion-blue hover:underline">Crop Meesho labels</Link>
+        </p>
+      </section>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Is my data uploaded to servers?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. All processing happens in your browser."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is it really free?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, unlimited usage, no registration."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What marketplaces are supported?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Amazon, Flipkart, Meesho, Myntra, Snapdeal, GlowRoad."
+                }
+              }
+            ]
+          })
+        }}
+      />
     </div>
   );
 }
