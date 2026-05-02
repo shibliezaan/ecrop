@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
-
-Sitemap: https://ecrop.vercel.app/sitemap.xml
+Disallow: /api/
+Sitemap: https://labelcrop.shop/sitemap.xml
+Sitemap: https://www.labelcrop.shop/sitemap.xml
