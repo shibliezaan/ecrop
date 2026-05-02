@@ -99,26 +99,21 @@ export default function HomePage() {
 
       <section className="max-w-4xl mx-auto mb-16">
         <h2 className="text-[32px] font-bold text-center mb-10">How It Works</h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="text-center">
             <div className="text-4xl mb-3">📄</div>
             <h3 className="text-[16px] font-semibold mb-2">1. Upload PDF</h3>
-            <p className="text-[14px] text-warm-gray-500">Drop your shipping label PDF. Works with A4 and letter from Flipkart, Amazon, Meesho.</p>
+            <p className="text-[14px] text-warm-gray-500">Drag & drop your shipping label PDF. Works with A4 and letter from Flipkart, Amazon, Meesho.</p>
           </div>
           <div className="text-center">
-            <div className="text-4xl mb-3">✂️</div>
-            <h3 className="text-[16px] font-semibold mb-2">2. Auto-Crop</h3>
-            <p className="text-[14px] text-warm-gray-500">Smart detection finds label, crops to exact 4x6 inches. Removes invoice if bundled.</p>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl mb-3">👀</div>
-            <h3 className="text-[16px] font-semibold mb-2">3. Preview</h3>
-            <p className="text-[14px] text-warm-gray-500">See cropped labels before download. Check barcode clarity, verify print quality.</p>
+            <div className="text-4xl mb-3">⚡</div>
+            <h3 className="text-[16px] font-semibold mb-2">2. Auto-Processing</h3>
+            <p className="text-[14px] text-warm-gray-500">We automatically detect and crop each label to 4x6 inches. Separate invoice from label automatically.</p>
           </div>
           <div className="text-center">
             <div className="text-4xl mb-3">⬇️</div>
-            <h3 className="text-[16px] font-semibold mb-2">4. Download</h3>
-            <p className="text-[14px] text-warm-gray-500">Download PDF ready for thermal printer. Print immediately, no waiting, no registration.</p>
+            <h3 className="text-[16px] font-semibold mb-2">3. Download</h3>
+            <p className="text-[14px] text-warm-gray-500">Download cropped PDF ready for thermal printer. Print immediately - no signup, no waiting.</p>
           </div>
         </div>
       </section>
