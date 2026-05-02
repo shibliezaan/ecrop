@@ -33,6 +33,12 @@ export function Footer() {
             >
               Terms
             </Link>
+            <Link 
+              href="/contact" 
+              className="text-[14px] text-warm-gray-500 hover:text-notion-black"
+            >
+              Contact
+            </Link>
           </div>
         </div>
       </div>
