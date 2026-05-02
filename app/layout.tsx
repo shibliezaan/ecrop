@@ -5,19 +5,23 @@ import { Footer } from "@/components/layout/footer";
 import { Script } from "next/script";
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://labelcrop.shop'),
+  metadataBase: new URL("https://labelcrop.shop"),
   title: {
-    default: 'LabelCrop - Free Shipping Label Cropper for Flipkart, Amazon, Meesho',
-    template: '%s | LabelCrop'
+    default: "LabelCrop - Free Shipping Label Cropper for Flipkart, Amazon, Meesho",
+    template: "%s | LabelCrop"
   },
-  description: 'Crop Flipkart, Amazon, Meesho shipping labels to 4x6 in 2 seconds. Free online label cropper - no upload, works in browser. 2,500+ Indian sellers use it daily.',
-  keywords: ['flipkart label crop','amazon label crop','meesho label crop','shipping label cropper','label crop online free','flipkart shipping label crop pdf'],
+  description: "Crop shipping labels for Flipkart, Amazon, Meesho to 4x6 thermal size. Free, no upload, works in browser.",
+  keywords: ["flipkart label crop", "amazon label crop", "meesho label crop", "shipping label cropper", "label crop online free", "flipkart shipping label crop pdf", "flipkart label cropper", "amazon label cropper", "thermal label maker"],
+  alternates: {
+    canonical: "https://labelcrop.shop",
+  },
   openGraph: {
-    title: 'LabelCrop - Free Shipping Label Cropper',
-    description: 'Crop shipping labels for Flipkart, Amazon, Meesho instantly',
-    url: 'https://labelcrop.shop',
-    siteName: 'LabelCrop',
-    type: 'website'
+    title: "LabelCrop - Free Shipping Label Cropper",
+    description: "Crop shipping labels for Flipkart, Amazon, Meesho to 4x6 thermal size. Free, browser-only.",
+    url: "https://labelcrop.shop",
+    siteName: "LabelCrop",
+    locale: "en_US",
+    type: "website"
   },
   robots: { index: true, follow: true }
 };
