@@ -21,9 +21,9 @@ export default function HomePage() {
           Free Shipping Label Cropper for Flipkart, Amazon & Meesho Sellers
         </h1>
         <div className="flex justify-center items-center gap-6 mb-6 opacity-60">
-          <img src="/flipkart.svg" alt="Flipkart shipping label crop tool" width="32" height="32" />
+          <img src="/flipkart.png" alt="Flipkart shipping label crop tool" width="32" height="32" />
           <img src="/amazon.svg" alt="Amazon shipping label crop tool" width="32" height="32" />
-          <img src="/meesho.svg" alt="Meesho shipping label crop tool" width="32" height="32" />
+          <img src="/meesho.png" alt="Meesho shipping label crop tool" width="32" height="32" />
         </div>
         <p className="text-[15px] font-semibold text-warm-gray-500 mb-4">
           Privacy-First • Browser-Only Processing • Zero Uploads
@@ -41,7 +41,7 @@ export default function HomePage() {
       <section className="max-w-5xl mx-auto mb-16">
         <div className="grid md:grid-cols-3 gap-6">
           <div className="text-center p-6 border rounded-xl">
-            <img src="/flipkart.svg" alt="Flipkart logo - crop Flipkart shipping labels free" width="48" height="48" className="mx-auto mb-4" />
+            <img src="/flipkart.png" alt="Flipkart logo - crop Flipkart shipping labels free" width="48" height="48" className="mx-auto mb-4" />
             <h3 className="text-[18px] font-semibold mb-2">Flipkart Label Crop</h3>
             <p className="text-[14px] text-warm-gray-500 mb-4">
               Flipkart labels include invoices in same PDF. We auto-separate shipping label from invoice, crop to exact 4x6, keep barcode crisp. Works with bulk PDFs up to 500 labels. Sellers in Delhi, Mumbai use this daily to save 2 hours per day. No Photoshop needed.
@@ -63,7 +63,7 @@ export default function HomePage() {
           </div>
           
           <div className="text-center p-6 border rounded-xl">
-            <img src="/meesho.svg" alt="Meesho logo - crop Meesho shipping labels online" width="48" height="48" className="mx-auto mb-4" />
+            <img src="/meesho.png" alt="Meesho logo - crop Meesho shipping labels online" width="48" height="48" className="mx-auto mb-4" />
             <h3 className="text-[18px] font-semibold mb-2">Meesho Label Crop</h3>
             <p className="text-[14px] text-warm-gray-500 mb-4">
               Meesho sellers need speed. Upload PDF, we auto-sort by SKU, crop to 4x6, generate pick list. Process 200 orders in under a minute. No watermark, no signup, completely free for resellers across India.
