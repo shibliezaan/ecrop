@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { Script } from "next/script";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://labelcrop.shop"),
